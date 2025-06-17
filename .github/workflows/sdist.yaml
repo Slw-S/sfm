@@ -19,11 +19,11 @@ jobs:
         run: |
           uv venv .venv
 
-      - name: Install Build Tools (via pip to avoid module errors)
+      - name: Install Build Tools via UV
         run: |
-          .venv/bin/python -m pip install --upgrade pip setuptools build
+          uv pip install --upgrade setuptools build
 
-      - name: Lock Dependencies (optional, only if needed)
+      - name: Lock Dependencies (optional)
         run: |
           uv lock
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Source Distribution (sdist)
         run: |
-          .venv/bin/python -m build --sdist
+          uv run build --sdist
 
       - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
