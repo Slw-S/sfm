@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Source Distribution (sdist)
         run: |
-          uv run build --sdist
+          python -m build --sdist
 
       - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
