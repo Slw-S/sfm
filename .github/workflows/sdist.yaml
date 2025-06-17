@@ -5,10 +5,7 @@ on:
 
 jobs:
   build-sdist:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -18,25 +15,26 @@ jobs:
         run: |
           curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh
 
-      - name: Create UV venv
+      - name: Create UV Virtual Environment
         run: |
-          uv venv create
+          uv venv .venv
 
-      - name: Install build backend & lock deps
+      - name: Install Build Tools & Lock Dependencies
         run: |
-          uv pip install --upgrade setuptools build wheel
+          uv pip install --upgrade setuptools build
           uv lock
 
-      - name: Sync to locked deps
+      - name: Sync to Locked Dependencies
         run: |
           uv sync --locked
 
-      - name: Build sdist via console-script
+      - name: Build Source Distribution (sdist)
         run: |
-          uv run build --sdist --outdir dist
+          uv run python -m build --sdist
 
-      - name: Upload sdist artifact
+      - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
         with:
           name: sdist
           path: dist/*.tar.gz
+
