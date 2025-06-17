@@ -17,23 +17,20 @@ jobs:
 
       - name: Create UV Virtual Environment
         run: |
-          uv venv venv
+          uv venv .venv
 
       - name: Install Build Tools & Lock Dependencies
         run: |
-          venv/bin/activate
-          uv pip install --upgrade setuptools build
-          uv lock
+          .venv/bin/uv pip install --upgrade setuptools build
+          .venv/bin/uv lock
 
       - name: Sync to Locked Dependencies
         run: |
-          . .venv/bin/activate
-          uv sync --locked
+          .venv/bin/uv sync --locked
 
       - name: Build Source Distribution (sdist)
         run: |
-          . .venv/bin/activate
-          python -m build --sdist
+          .venv/bin/python -m build --sdist
 
       - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
