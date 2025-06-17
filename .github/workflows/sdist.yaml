@@ -21,12 +21,12 @@ jobs:
 
       - name: Install Build Tools & Lock Dependencies
         run: |
-          .venv/bin/uv pip install --upgrade setuptools build
-          .venv/bin/uv lock
+          uv pip install --upgrade setuptools build
+          uv lock
 
       - name: Sync to Locked Dependencies
         run: |
-          .venv/bin/uv sync --locked
+          uv sync --locked
 
       - name: Build Source Distribution (sdist)
         run: |
