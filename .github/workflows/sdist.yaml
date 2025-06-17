@@ -32,10 +32,7 @@ jobs:
           uv sync --locked
 
       - name: Build Source Distribution (sdist)
-        run: |
-          source .venv/bin/activate
-          python -m build --sdist
-
+        run: .venv/bin/python -m build --sdist
 
 
       - name: Upload sdist Artifact
