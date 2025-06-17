@@ -17,11 +17,11 @@ jobs:
 
       - name: Create UV Virtual Environment
         run: |
-          uv venv .
+          uv venv venv
 
       - name: Install Build Tools & Lock Dependencies
         run: |
-          . .venv/bin/activate
+          venv/bin/activate
           uv pip install --upgrade setuptools build
           uv lock
 
