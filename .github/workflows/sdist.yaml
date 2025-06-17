@@ -18,13 +18,16 @@ jobs:
         run: |
           curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh
 
-      - name: Create UV Lock File
+      - name: Create UV Virtual Environment
         run: |
           uv venv create
-          uv pip install -U setuptools build
+
+      - name: Install Build Tools & Lock Dependencies
+        run: |
+          uv pip install --upgrade setuptools build
           uv lock
 
-      - name: Sync Environment with Lock File
+      - name: Sync to Locked Dependencies
         run: |
           uv sync --locked
 
@@ -32,8 +35,9 @@ jobs:
         run: |
           uv venv exec python -m build --sdist
 
-      - name: Upload Source Distribution
+      - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
         with:
           name: sdist-${{ matrix.os }}
           path: dist/*.tar.gz
+
