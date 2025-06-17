@@ -1,0 +1,39 @@
+name: Build Source Distribution
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-sdist:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install UV
+        run: |
+          curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh
+
+      - name: Create UV Lock File
+        run: |
+          uv venv create
+          uv pip install -U setuptools build
+          uv lock
+
+      - name: Sync Environment with Lock File
+        run: |
+          uv sync --locked
+
+      - name: Build Source Distribution (sdist)
+        run: |
+          uv venv exec python -m build --sdist
+
+      - name: Upload Source Distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdist-${{ matrix.os }}
+          path: dist/*.tar.gz
