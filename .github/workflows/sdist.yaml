@@ -6,7 +6,7 @@ on:
 jobs:
   build-sdist:
     runs-on: ubuntu-latest
-  
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,24 +17,26 @@ jobs:
 
       - name: Create UV Virtual Environment
         run: |
-          uv venv create
+          uv venv .
 
       - name: Install Build Tools & Lock Dependencies
         run: |
+          . .venv/bin/activate
           uv pip install --upgrade setuptools build
           uv lock
 
       - name: Sync to Locked Dependencies
         run: |
+          . .venv/bin/activate
           uv sync --locked
 
       - name: Build Source Distribution (sdist)
         run: |
-          uv venv exec python -m build --sdist
+          . .venv/bin/activate
+          python -m build --sdist
 
       - name: Upload sdist Artifact
         uses: actions/upload-artifact@v4
         with:
           name: sdist
           path: dist/*.tar.gz
-
