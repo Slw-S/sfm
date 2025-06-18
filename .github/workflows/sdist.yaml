@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Build Tools via UV
         run: |
-          uv pip install --upgrade setuptools build
+          .venv/bin/uv pip install --upgrade setuptools build
 
       - name: Lock Dependencies (optional)
         run: |
