@@ -1,7 +1,11 @@
-name: Build Source Distribution
+name: Build sdist with uv
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
 
 jobs:
   build-sdist:
@@ -11,32 +15,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install uv
-        run: |
-          python -m pip install uv
-          python -m uv venv .venv
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-      - name: Create UV Virtual Environment
+      - name: Install uv
+        run: pip install uv
+
+      - name: Generate uv.lock if missing
+        run: |
+          if [ ! -f uv.lock ]; then
+            uv pip compile --generate-hashes
+          fi
+
+      - name: Create and activate virtualenv, install dependencies
         run: |
           uv venv .venv
+          source .venv/bin/activate
+          uv pip install -r uv.lock
+          uv pip install build
 
-      - name: Install Build Tools via UV
+      - name: Build sdist
         run: |
-          .venv/bin/uv pip install --upgrade setuptools build
+          source .venv/bin/activate
+          python -m build --sdist
 
-      - name: Lock Dependencies (optional)
-        run: |
-          uv lock
-
-      - name: Sync to Locked Dependencies
-        run: |
-          uv sync --locked
-
-      - name: Build Source Distribution (sdist)
-        run: .venv/bin/python -m build --sdist
-
-
-      - name: Upload sdist Artifact
+      - name: Upload sdist artifact
         uses: actions/upload-artifact@v4
         with:
           name: sdist
