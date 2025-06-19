@@ -1,11 +1,7 @@
 name: Build sdist with uv
 
 on:
-  push:
-    branches:
-      - master
-      - main
-  pull_request:
+ workflow_dispatch:
 
 jobs:
   build-sdist:
@@ -26,10 +22,10 @@ jobs:
       - name: Generate uv.lock if missing
         run: |
           if [ ! -f uv.lock ]; then
-            uv pip compile --generate-hashes
+            uv pip compile --generate-hashes --group default
           fi
 
-      - name: Create and activate virtualenv, install dependencies
+      - name: Create virtualenv and install dependencies
         run: |
           uv venv .venv
           source .venv/bin/activate
