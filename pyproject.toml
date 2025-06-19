@@ -4,7 +4,7 @@ requires = ['meson-python', 'wheel', 'numpy']
 
 [project]
 name = 'sfm'
-version = '2025.01.29'
+version = '2025.06.16'
 description = 'An extension module implementing the fast marching method'
 readme = 'README.md'
 dependencies = ["numpy"]
