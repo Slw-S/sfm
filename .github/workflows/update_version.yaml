@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      OLD_VERSION: '2025.01.29'
+      OLD_VERSION: '2025.06.16'
       NEW_VERSION: '2025.06.19'
 
     steps:
