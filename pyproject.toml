@@ -3,16 +3,16 @@ build-backend = 'mesonpy'
 requires = ['meson-python', 'wheel', 'numpy']
 
 [project]
-name = 'scikit-fmm'
+name = 'sfm'
 version = '2025.01.29'
 description = 'An extension module implementing the fast marching method'
 readme = 'README.md'
 dependencies = ["numpy"]
 requires-python = '>=3.9'
 license = {file = 'LICENSE.txt'}
-url = 'https://github.com/scikit-fmm/scikit-fmm'
+url = 'https://github.com/Slw-S/sfm'
 authors = [
-  {name = 'Jason Furtney', email = 'jkfurtney@gmail.com'},
+  {name = 'Sylvester S', email = 'slwsz3@gproton.me'},
 ]
 keywords         = ['fast marching method', 'Eikonal equation', 'interface', 'boundary']
 classifiers      = ["Development Status :: 5 - Production/Stable",
