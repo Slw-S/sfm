@@ -1,9 +1,6 @@
 // This file provides the interface between Python and the C++
 // implementation of the fast marching method in fast_marching.cpp
 
- // This file provides the interface between Python and the C++
-// implementation of the fast marching method in fast_marching.cpp
-
 #include "Python.h"
 #include "numpy/arrayobject.h"
 
@@ -18,6 +15,17 @@
 #define EXTENSION_VELOCITY    2
 
 static PyObject *distance_method(PyObject *self, PyObject *args);
+
+// Helper function to compare array shapes
+static int arrays_same_shape(PyArrayObject* a, PyArrayObject* b) {
+    if (PyArray_NDIM(a) != PyArray_NDIM(b))
+        return 0;
+    for (int i = 0; i < PyArray_NDIM(a); ++i) {
+        if (PyArray_DIM(a, i) != PyArray_DIM(b, i))
+            return 0;
+    }
+    return 1;
+}
 
 static PyMethodDef fmm_methods[] =
 {
@@ -176,7 +184,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
         return NULL;
       }
 
-      if (! PyArray_SAMESHAPE(phi,speed))
+      if (!arrays_same_shape(phi, speed))
       {
         PyErr_SetString(PyExc_ValueError,
                         "phi and speed must have the same shape");
@@ -213,7 +221,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     }
   }
 
-  if (! PyArray_SAMESHAPE(phi,flag))
+  if (!arrays_same_shape(phi, flag))
   {
     PyErr_SetString(PyExc_ValueError, "phi and flag must have the same shape");
     Py_XDECREF(phi);
