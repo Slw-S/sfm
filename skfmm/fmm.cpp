@@ -2,7 +2,11 @@
 // implementation of the fast marching method in fast_marching.cpp
 
 #include "Python.h"
-#include "numpy/arrayobject.h"
+#include "numpy/ndarrayobject.h"
+
+#ifndef NPY_IN_ARRAY
+#define NPY_IN_ARRAY (NPY_ARRAY_ALIGNED | NPY_ARRAY_ENSUREARRAY | NPY_ARRAY_NOTSWAPPED | NPY_ARRAY_BEHAVED)
+#endif
 
 #include "distance_marcher.h"
 #include "travel_time_marcher.h"
@@ -15,17 +19,6 @@
 #define EXTENSION_VELOCITY    2
 
 static PyObject *distance_method(PyObject *self, PyObject *args);
-
-// Helper function to compare array shapes
-static int arrays_same_shape(PyArrayObject* a, PyArrayObject* b) {
-    if (PyArray_NDIM(a) != PyArray_NDIM(b))
-        return 0;
-    for (int i = 0; i < PyArray_NDIM(a); ++i) {
-        if (PyArray_DIM(a, i) != PyArray_DIM(b, i))
-            return 0;
-    }
-    return 1;
-}
 
 static PyMethodDef fmm_methods[] =
 {
@@ -92,6 +85,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   speed    = 0;
   ext_mask = 0;
 
+
+
   if (!PyArg_ParseTuple(args, "OOOOOiiidi", &pphi, &pdx, &pflag,
                         &pspeed, &pext_mask, &self_test, &mode,
                         &order, &narrow, &periodic))
@@ -120,13 +115,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     return NULL;
   }
 
-  phi = (PyArrayObject *)PyArray_FromAny(
-      pphi,
-      PyArray_DescrFromType(NPY_DOUBLE),
-      1,
-      10,
-      NPY_ARRAY_IN_ARRAY,
-      NULL);
+  phi = (PyArrayObject *)PyArray_FROMANY(pphi, NPY_DOUBLE, 1,
+                                         10, NPY_IN_ARRAY);
   if (!phi)
   {
     PyErr_SetString(PyExc_ValueError,
@@ -134,13 +124,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     return NULL;
   }
 
-  dx = (PyArrayObject *)PyArray_FromAny(
-      pdx,
-      PyArray_DescrFromType(NPY_DOUBLE),
-      1,
-      1,
-      NPY_ARRAY_IN_ARRAY,
-      NULL);
+  dx = (PyArrayObject *)PyArray_FROMANY(pdx, NPY_DOUBLE, 1,
+                                        1, NPY_IN_ARRAY);
   if (!dx)
   {
     PyErr_SetString(PyExc_ValueError, "dx must be a 1D array of doubles");
@@ -148,13 +133,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     return NULL;
   }
 
-  flag = (PyArrayObject *)PyArray_FromAny(
-      pflag,
-      PyArray_DescrFromType(NPY_LONGLONG),
-      1,
-      10,
-      NPY_ARRAY_IN_ARRAY,
-      NULL);
+  flag = (PyArrayObject *)PyArray_FROMANY(pflag, NPY_LONGLONG, 1,
+                                          10, NPY_IN_ARRAY);
   if (!flag)
   {
     PyErr_SetString(PyExc_ValueError,
@@ -167,13 +147,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   if (mode == TRAVEL_TIME || mode == EXTENSION_VELOCITY)
   {
     {
-      speed = (PyArrayObject *)PyArray_FromAny(
-          pspeed,
-          PyArray_DescrFromType(NPY_DOUBLE),
-          1,
-          10,
-          NPY_ARRAY_IN_ARRAY,
-          NULL);
+      speed = (PyArrayObject *)PyArray_FROMANY(pspeed, NPY_DOUBLE, 1,
+                                               10, NPY_IN_ARRAY);
       if (!speed)
       {
         PyErr_SetString(PyExc_ValueError,
@@ -184,7 +159,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
         return NULL;
       }
 
-      if (!arrays_same_shape(phi, speed))
+      if (! PyArray_SAMESHAPE(phi,speed))
       {
         PyErr_SetString(PyExc_ValueError,
                         "phi and speed must have the same shape");
@@ -221,7 +196,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     }
   }
 
-  if (!arrays_same_shape(phi, flag))
+  if (! PyArray_SAMESHAPE(phi,flag))
   {
     PyErr_SetString(PyExc_ValueError, "phi and flag must have the same shape");
     Py_XDECREF(phi);
@@ -250,13 +225,8 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
                                            shape2, NPY_DOUBLE, 0);
     if (! f_ext) return NULL;
 
-    ext_mask = (PyArrayObject *)PyArray_FromAny(
-        pext_mask,
-        PyArray_DescrFromType(NPY_LONGLONG),
-        1,
-        10,
-        NPY_ARRAY_IN_ARRAY,
-        NULL);
+    ext_mask = (PyArrayObject *)PyArray_FROMANY(pext_mask, NPY_LONGLONG, 1,
+                                                10, NPY_IN_ARRAY);
     if (! ext_mask)
       {
         PyErr_SetString(PyExc_ValueError,
