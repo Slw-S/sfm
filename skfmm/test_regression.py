@@ -1,5 +1,6 @@
 import numpy as np
 import skfmm
+import time
 
 # Create a simple test array
 phi = np.arange(25, dtype=np.float64).reshape(5, 5)
@@ -17,3 +18,29 @@ try:
     print("Success! Result shape:", result.shape)
 except Exception as e:
     print("Regression detected! Exception:", e)
+
+print("Starting benchmark")
+
+# Use a large array
+shape = (4000, 4000)
+phi_c = np.ones(shape, order='C')
+phi_f = np.ones(shape, order='F')
+phi_c[2000, 2000] = -1
+phi_f[2000, 2000] = -1
+
+N = 10  # number of repetitions, increase if you want stronger effect
+
+# C-contiguous timing
+start = time.time()
+for _ in range(N):
+    d_c = skfmm.distance(phi_c)
+print("C-contiguous time: {:.3f}s".format(time.time() - start))
+
+# F-contiguous timing
+start = time.time()
+for _ in range(N):
+    d_f = skfmm.distance(phi_f)
+print("F-contiguous time: {:.3f}s".format(time.time() - start))
+
+# Results check (should still be identical)
+print("Results identical:", np.allclose(d_c, d_f))
