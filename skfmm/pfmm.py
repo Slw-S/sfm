@@ -20,14 +20,14 @@ def pre_process_args(phi, dx, narrow, periodic, ext_mask=None):
     dx = np.array(dx)
 
     if isinstance(phi, np.ma.MaskedArray):
-        flag = np.zeros(phi.shape, dtype=np.dtype("longlong"))
+        flag = np.zeros(phi.shape, dtype=np.int64
         flag[phi.mask] = MASK
         phi = phi.data
     else:
-        flag = np.zeros(phi.shape, dtype=np.dtype("longlong"))
+        flag = np.zeros(phi.shape, dtype=np.int64
 
     if ext_mask is None:
-        ext_mask = np.zeros(phi.shape, dtype=np.dtype("longlong"))
+        ext_mask = np.zeros(phi.shape, dtype=np.int64
 
     periodic_data = 0
     if isinstance(periodic, bool):

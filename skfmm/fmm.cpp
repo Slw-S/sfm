@@ -128,7 +128,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     return NULL;
   }
 
-  flag = (PyArrayObject *)PyArray_FROMANY(pflag, NPY_LONGLONG, 1,
+  flag = (PyArrayObject *)PyArray_FROMANY(pflag, NPY_INT64, 1,
                                           10, NPY_ARRAY_IN_ARRAY);
   if (!flag)
   {
@@ -220,7 +220,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
                                            shape2, NPY_DOUBLE, 0);
     if (! f_ext) return NULL;
 
-    ext_mask = (PyArrayObject *)PyArray_FROMANY(pext_mask, NPY_LONGLONG, 1,
+    ext_mask = (PyArrayObject *)PyArray_FROMANY(pext_mask, NPY_INT64, 1,
                                                 10, NPY_ARRAY_IN_ARRAY);
     if (! ext_mask)
       {
