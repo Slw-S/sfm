@@ -7,7 +7,7 @@ name = 'sfm'
 version = '2025.06.28'
 description = 'An extension module implementing the fast marching method'
 readme = 'README.md'
-requires-python = '>=3.9'
+requires-python = '>=3.10'
 license = {file = 'LICENSE.txt'}
 url = 'https://github.com/Slw-S/sfm'
 authors = [
