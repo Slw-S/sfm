@@ -3,11 +3,6 @@
 
 #include "Python.h"
 #include "numpy/ndarrayobject.h"
-
-#ifndef NPY_IN_ARRAY
-#define NPY_IN_ARRAY (NPY_ARRAY_ALIGNED | NPY_ARRAY_ENSUREARRAY | NPY_ARRAY_NOTSWAPPED | NPY_ARRAY_BEHAVED)
-#endif
-
 #include "distance_marcher.h"
 #include "travel_time_marcher.h"
 #include "extension_velocity_marcher.h"
@@ -116,7 +111,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   }
 
   phi = (PyArrayObject *)PyArray_FROMANY(pphi, NPY_DOUBLE, 1,
-                                         10, NPY_IN_ARRAY);
+                                         10, NPY_ARRAY_IN_ARRAY);
   if (!phi)
   {
     PyErr_SetString(PyExc_ValueError,
@@ -125,7 +120,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   }
 
   dx = (PyArrayObject *)PyArray_FROMANY(pdx, NPY_DOUBLE, 1,
-                                        1, NPY_IN_ARRAY);
+                                        1, NPY_ARRAY_IN_ARRAY);
   if (!dx)
   {
     PyErr_SetString(PyExc_ValueError, "dx must be a 1D array of doubles");
@@ -134,7 +129,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   }
 
   flag = (PyArrayObject *)PyArray_FROMANY(pflag, NPY_LONGLONG, 1,
-                                          10, NPY_IN_ARRAY);
+                                          10, NPY_ARRAY_IN_ARRAY);
   if (!flag)
   {
     PyErr_SetString(PyExc_ValueError,
@@ -148,7 +143,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
   {
     {
       speed = (PyArrayObject *)PyArray_FROMANY(pspeed, NPY_DOUBLE, 1,
-                                               10, NPY_IN_ARRAY);
+                                               10, NPY_ARRAY_IN_ARRAY);
       if (!speed)
       {
         PyErr_SetString(PyExc_ValueError,
@@ -226,7 +221,7 @@ static PyObject *distance_method(PyObject *self, PyObject *args)
     if (! f_ext) return NULL;
 
     ext_mask = (PyArrayObject *)PyArray_FROMANY(pext_mask, NPY_LONGLONG, 1,
-                                                10, NPY_IN_ARRAY);
+                                                10, NPY_ARRAY_IN_ARRAY);
     if (! ext_mask)
       {
         PyErr_SetString(PyExc_ValueError,
